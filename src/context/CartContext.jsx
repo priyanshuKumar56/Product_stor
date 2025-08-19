@@ -21,18 +21,18 @@ export function CartProvider({ children }) {
 
   useEffect(() => {
     localStorage.setItem("cartItems", JSON.stringify(cartItems));
-    console.log("[v0] Cart items updated:", cartItems);
+    console.log("Cart items updated:", cartItems);
   }, [cartItems]);
 
   const addToCart = (product, selectedColor, selectedSize) => {
-    console.log("[v0] addToCart function called with:", {
+    console.log("addToCart function called with:", {
       product,
       selectedColor,
       selectedSize,
     });
 
     setCartItems((prevItems) => {
-      console.log("[v0] Previous cart items:", prevItems);
+      console.log("Previous cart items:", prevItems);
 
       const existingItemIndex = prevItems.findIndex(
         (item) =>
@@ -42,10 +42,10 @@ export function CartProvider({ children }) {
       );
 
       if (existingItemIndex >= 0) {
-        console.log("[v0] Found existing item, updating quantity");
+        console.log("Found existing item, updating quantity");
         const updatedItems = [...prevItems];
         updatedItems[existingItemIndex].quantity += 1;
-        console.log("[v0] Updated items:", updatedItems);
+        console.log("Updated items:", updatedItems);
         return updatedItems;
       }
 
