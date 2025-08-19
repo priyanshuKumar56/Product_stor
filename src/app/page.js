@@ -1,7 +1,10 @@
+"use client";
+
 import { products } from "@/data/products";
 import Header from "../components/Header";
 import { CartProvider } from "../context/CartContext";
 import ProductCard from "../components/ProductCard";
+import { useState } from "react";
 
 function MyApp({ Component, pageProps }) {
   const [selectedProduct, setSelectedProduct] = useState(null);

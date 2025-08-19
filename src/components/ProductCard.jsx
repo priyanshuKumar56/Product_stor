@@ -2,12 +2,13 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import Link from "next/link";
 
 export default function ProductCard({ product, onSelect }) {
   return (
     <Card className="group hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
       <CardContent className="p-0">
-        <div className="aspect-square bg-gray-100 rounded-t-lg overflow-hidden">
+        <div className=" bg-gray-100 rounded-t-lg overflow-hidden">
           <img
             src={product.imageUrl || "/placeholder.svg"}
             alt={product.name}
@@ -44,12 +45,14 @@ export default function ProductCard({ product, onSelect }) {
         </div>
       </CardContent>
       <CardFooter className="p-6 pt-0">
-        <Button
-          onClick={onSelect}
-          className="w-full bg-blue-600 hover:bg-blue-700"
-        >
-          View Details
-        </Button>
+        <Link href={`products/${product.id}`}>
+          <Button
+            onClick={onSelect}
+            className="w-full bg-blue-600 hover:bg-blue-700"
+          >
+            View Details
+          </Button>
+        </Link>
       </CardFooter>
     </Card>
   );
