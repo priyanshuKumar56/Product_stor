@@ -44,9 +44,6 @@ export default function Header() {
           {/* Actions */}
           <div className="flex items-center gap-4">
             <button className="p-2 text-slate-600 hover:text-blue-600 transition-colors">
-              <Heart className="h-6 w-6" />
-            </button>
-            <button className="p-2 text-slate-600 hover:text-blue-600 transition-colors">
               <User className="h-6 w-6" />
             </button>
             <Link
