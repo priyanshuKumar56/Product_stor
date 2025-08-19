@@ -5,6 +5,7 @@ import Header from "../components/Header";
 import { CartProvider } from "../context/CartContext";
 import ProductCard from "../components/ProductCard";
 import { useState } from "react";
+import RecentlyViewed from "@/components/RecentlyViewed";
 
 function MyApp({ Component, pageProps }) {
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -39,6 +40,8 @@ function MyApp({ Component, pageProps }) {
               />
             ))}
           </div>
+
+          <RecentlyViewed onProductSelect={handleProductSelect} />
         </main>
       </div>
     </CartProvider>

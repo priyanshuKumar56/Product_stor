@@ -1,54 +1,93 @@
 "use client";
 
-// components/RecentlyViewed.js
-import React, { useEffect, useState } from "react";
-import Link from "next/link";
+import { useEffect, useState } from "react";
+import { Eye } from "lucide-react";
 
-const RecentlyViewed = () => {
+export default function RecentlyViewed({ onProductSelect }) {
   const [recentlyViewedProducts, setRecentlyViewedProducts] = useState([]);
 
   useEffect(() => {
-    // TODO: Implement logic to load recently viewed products from localStorage or cookies.
-    // Ensure only the last 3 unique products are shown.
-    // This component is currently a placeholder.
-    const storedProducts = []; // Replace with actual logic to retrieve from storage
-    setRecentlyViewedProducts(storedProducts);
+    const loadRecentlyViewed = () => {
+      try {
+        const stored = localStorage.getItem("recentlyViewed");
+        if (stored) {
+          const products = JSON.parse(stored);
+          setRecentlyViewedProducts(products.slice(0, 3));
+        }
+      } catch (error) {
+        console.error("Error loading recently viewed products:", error);
+      }
+    };
+
+    loadRecentlyViewed();
+
+    window.addToRecentlyViewed = (product) => {
+      try {
+        const stored = localStorage.getItem("recentlyViewed");
+        let products = stored ? JSON.parse(stored) : [];
+
+        // Remove if already exists to avoid duplicates
+        products = products.filter((p) => p.id !== product.id);
+
+        // Add to beginning of array
+        products.unshift({
+          id: product.id,
+          name: product.name,
+          price: product.price,
+          imageUrl: product.imageUrl,
+        });
+
+        // Keep only last 3 unique products
+        products = products.slice(0, 3);
+
+        localStorage.setItem("recentlyViewed", JSON.stringify(products));
+        setRecentlyViewedProducts(products);
+      } catch (error) {
+        console.error("Error saving recently viewed product:", error);
+      }
+    };
+
+    return () => {
+      delete window.addToRecentlyViewed;
+    };
   }, []);
 
   if (recentlyViewedProducts.length === 0) {
-    return null; // Don't render if no products have been viewed
+    return null;
   }
 
   return (
-    <div className="mt-12 p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold text-gray-800 mb-6">Recently Viewed</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+    <div className="mt-16 pt-8 border-t border-slate-200">
+      <div className="flex items-center gap-3 mb-8">
+        <Eye className="h-6 w-6 text-blue-600" />
+        <h2 className="text-2xl font-bold text-slate-800">Recently Viewed</h2>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {recentlyViewedProducts.map((product) => (
-          <Link
+          <div
             key={product.id}
-            href={`/products/${product.id}`}
-            className="block"
+            onClick={() => onProductSelect && onProductSelect(product)}
+            className="group bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer"
           >
-            <div className="border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200">
+            <div className="aspect-square bg-slate-100 overflow-hidden">
               <img
-                src={product.imageUrl}
+                src={product.imageUrl || "/placeholder.svg"}
                 alt={product.name}
-                className="w-full h-32 object-cover"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
               />
-              <div className="p-4">
-                <h3 className="text-lg font-semibold text-gray-800 truncate">
-                  {product.name}
-                </h3>
-                <p className="text-blue-600 font-bold mt-1">
-                  ${product.price.toFixed(2)}
-                </p>
-              </div>
             </div>
-          </Link>
+            <div className="p-4">
+              <h3 className="font-semibold text-slate-800 group-hover:text-blue-600 transition-colors">
+                {product.name}
+              </h3>
+              <p className="text-blue-600 font-bold mt-2">
+                ${product.price.toFixed(2)}
+              </p>
+            </div>
+          </div>
         ))}
       </div>
     </div>
   );
-};
-
-export default RecentlyViewed;
+}
